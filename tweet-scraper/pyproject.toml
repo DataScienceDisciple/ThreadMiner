@@ -1,0 +1,17 @@
+[tool.kedro]
+package_name = "tweet_scraper"
+project_name = "tweet-scraper"
+project_version = "0.18.4"
+
+[tool.isort]
+profile = "black"
+
+[tool.pytest.ini_options]
+addopts = """
+--cov-report term-missing \
+--cov src/tweet_scraper -ra"""
+
+[tool.coverage.report]
+fail_under = 0
+show_missing = true
+exclude_lines = ["pragma: no cover", "raise NotImplementedError"]

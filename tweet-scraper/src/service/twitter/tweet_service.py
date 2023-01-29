@@ -10,7 +10,7 @@ class TweetService:
     def __init__(self, bearer_token):
         self.client = tweepy.Client(bearer_token)
 
-    def get_users_available_tweets(self, user: TwitterUser) -> list[Tweet]:
+    def get_users_available_tweets(self, user: TwitterUser, use_search: bool = False) -> list[Tweet]:
         list_of_tweets = []
         tweet_count = user.tweet_count
         n_pages = tweet_count // self.MAX_RESULTS_LIMIT if tweet_count <= self.MAX_AVAILABLE_LIMIT else 33
@@ -18,17 +18,21 @@ class TweetService:
                                          user.user_id,
                                          max_results=self.MAX_RESULTS_LIMIT,
                                          limit=n_pages,
-                                         tweet_fields="id,created_at,text,conversation_id,public_metrics"):
+                                         tweet_fields="id,created_at,text,conversation_id,public_metrics,in_reply_to_user_id"):
             for tweet in response.data:
                 list_of_tweets.append(self._get_tweet_data(tweet))
+
+        # if tweet_count > 3200 and use_search:
+        #     api = tweepy.API()
         return list_of_tweets
 
     @staticmethod
     def _get_tweet_data(tweet: tweepy.Tweet) -> Tweet:
-        return Tweet(id=tweet["id"],
+        return Tweet(id=str(tweet["id"]),
                      created_at=tweet["created_at"],
                      text=tweet["text"],
-                     conversation_id=tweet["conversation_id"],
+                     conversation_id=str(tweet["conversation_id"]),
+                     in_reply_to_user_id=str(tweet["in_reply_to_user_id"]),
                      retweet_count=tweet.data["public_metrics"]['retweet_count'],
                      reply_count=tweet.data["public_metrics"]['reply_count'],
                      like_count=tweet.data["public_metrics"]['like_count'],

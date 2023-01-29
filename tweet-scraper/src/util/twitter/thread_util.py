@@ -12,7 +12,7 @@ class ThreadUtil:
     def get_users_threads_from_api(self) -> list[Tweet]:
         thread_candidates = []
         for tweet in self.tweets_api:
-            if not tweet.text.startswith("RT @") and not tweet.text.startswith("@"):
+            if not tweet.text.startswith("RT @"):
                 thread_candidates.append(tweet)
         return thread_candidates
 

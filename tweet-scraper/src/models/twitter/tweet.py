@@ -6,7 +6,8 @@ class Tweet(BaseModel):
     id: str
     created_at: datetime.datetime
     text: str
-    conversation_id: int
+    conversation_id: str
+    in_reply_to_user_id: str
     retweet_count: int
     reply_count: int
     like_count: int
